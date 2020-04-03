@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach (ParticleSystem weapon in particleWeapons)
         {
+            weapon.Play();
             var e = weapon.emission;
             e.enabled = false;
         } 
@@ -63,7 +64,6 @@ public class PlayerController : MonoBehaviour
         {
             foreach (ParticleSystem weapon in particleWeapons)
             {
-                // weapon.Stop(false, ParticleSystemStopBehavior.StopEmitting);
                 var e = weapon.emission;
                 e.enabled = false;
             }

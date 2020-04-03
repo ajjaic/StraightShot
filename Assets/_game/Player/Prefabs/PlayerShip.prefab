@@ -60,9 +60,12 @@ MonoBehaviour:
   rotationPitchFactor: -15
   rotationRollFactor: -35
   xPosRange: 14
-  xSpeed: 20
   yPosRange: 10
+  xSpeed: 20
   ySpeed: 20
+  particleWeapons:
+  - {fileID: 985911101}
+  - {fileID: 2770343012811424311}
 --- !u!54 &1397348533
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -184,6 +187,12 @@ PrefabInstance:
 --- !u!4 &2770343012811424265 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2770343012156962942, guid: db47f90813570a847bbbe727fdd69f45,
+    type: 3}
+  m_PrefabInstance: {fileID: 2030418551}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2770343012811424311 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2770343012156962880, guid: db47f90813570a847bbbe727fdd69f45,
     type: 3}
   m_PrefabInstance: {fileID: 2030418551}
   m_PrefabAsset: {fileID: 0}
@@ -450,6 +459,12 @@ PrefabInstance:
 --- !u!4 &985911043 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2770343012156962942, guid: db47f90813570a847bbbe727fdd69f45,
+    type: 3}
+  m_PrefabInstance: {fileID: 2770343011783686013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &985911101 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2770343012156962880, guid: db47f90813570a847bbbe727fdd69f45,
     type: 3}
   m_PrefabInstance: {fileID: 2770343011783686013}
   m_PrefabAsset: {fileID: 0}
