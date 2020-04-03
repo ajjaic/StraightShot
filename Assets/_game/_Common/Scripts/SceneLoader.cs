@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +12,7 @@ public class SceneLoader : MonoBehaviour
         if (loadNextSceneAutomatically)
         {
             LoadNextSceneWithDelay(timeDelaySeconds);
-        } 
+        }
     }
 
     public void LoadNextScene()
@@ -44,6 +43,7 @@ public class SceneLoader : MonoBehaviour
             yield return new WaitForSeconds(timeDelay);
             LoadCurrentScene();
         }
+
         StartCoroutine(Helper());
     }
 }

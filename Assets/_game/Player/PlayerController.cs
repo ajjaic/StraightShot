@@ -1,30 +1,30 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement speed")]
-    [Tooltip("In ms^-1")] [SerializeField] private float xSpeed = 15;
-    [Tooltip("In ms^-1")] [SerializeField] private float ySpeed = 15;
-    
-    [Header("Bounds")]
-    [SerializeField] private float xPosRange = 11f;
-    [SerializeField] private float yPosRange = 8f;
-
-    [Header("Position factors")]
-    [SerializeField] private float positionPitchFactor = -4f;
-    [SerializeField] private float positionYawFactor = 1.875f;
-    
-    [Header("Control throw factors")]
-    [SerializeField] private float rotationPitchFactor = -15;
-    [SerializeField] private float rotationRollFactor = -30f;
-    
-    private float _xThrow, _yThrow;
     private bool _isPlayerDead;
-    
+
+    private float _xThrow, _yThrow;
+
+    [Header("Position factors")] [SerializeField]
+    private float positionPitchFactor = -4f;
+
+    [SerializeField] private float positionYawFactor = 1.875f;
+
+    [Header("Control throw factors")] [SerializeField]
+    private float rotationPitchFactor = -15;
+
+    [SerializeField] private float rotationRollFactor = -30f;
+
+    [Header("Bounds")] [SerializeField] private float xPosRange = 11f;
+
+    [Header("Movement speed")] [Tooltip("In ms^-1")] [SerializeField]
+    private float xSpeed = 15;
+
+    [SerializeField] private float yPosRange = 8f;
+    [Tooltip("In ms^-1")] [SerializeField] private float ySpeed = 15;
+
     // messages
     private void Update()
     {
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
         yRot = transform.localPosition.x * positionYawFactor;
         zRot = _xThrow * rotationRollFactor;
         // zRot = _xThrow * rotationPitchFactor;
-        
+
         transform.localRotation = Quaternion.Euler(xRot, yRot, zRot);
     }
 
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
         transform.localPosition = new Vector3(newXPos, newYPos, transform.localPosition.z);
     }
-    
+
     // API
     public void OnPlayerDeath()
     {

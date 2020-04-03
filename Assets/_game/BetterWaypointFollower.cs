@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityStandardAssets.Utility;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -15,36 +12,21 @@ using UnityEditor;
  * Enables invoke of method calls triggered by waypoints.
  **/
 public class BetterWaypointFollower : MonoBehaviour {
-    public UnityEngine.Object circuitObject;
     public WaypointCircuit circuit;
-    public float routeSpeed = 50f;
-    public float lookAheadDistance = 100f;
-
-    #region Varying Speed Variables
-    public bool varyingSpeed = false;
-    public float initialSpeed;
-    public float rateOfChange = 1f;
-    public float[] waypointSpeedFactors;
-    #endregion
-
-    #region Invoke Method Variables
-    public bool invokeMethods = false;
-    public bool[] invokeWaypointEnabled;
-    public string[] invokeNames;
-    public float[] invokeDelay;
-    public UnityEngine.Object[] invokeObject;
-    #endregion
+    public Object circuitObject;
+    private float currentSpeed;
 
     private float[] distances;
-    private float progressDistance;
-    private float currentSpeed;
     private int lastWaypoint;
+    public float lookAheadDistance = 100f;
+    private float progressDistance;
+    public float routeSpeed = 50f;
 
     // Pull Waypoint data from circuit to set up our varying speed variables.
     public void InitializeSpeeds() {
         if(waypointSpeedFactors == null || waypointSpeedFactors.Length != circuit.Waypoints.Length) {
             waypointSpeedFactors = new float[circuit.Waypoints.Length];
-            for(int i = 0; i < waypointSpeedFactors.Length; i++)
+            for(var i = 0; i < waypointSpeedFactors.Length; i++)
                 waypointSpeedFactors[i] = 1f;
             initialSpeed = routeSpeed;
         }
@@ -56,8 +38,8 @@ public class BetterWaypointFollower : MonoBehaviour {
             invokeWaypointEnabled = new bool[circuit.Waypoints.Length];
             invokeNames = new string[circuit.Waypoints.Length];
             invokeDelay = new float[circuit.Waypoints.Length];
-            invokeObject = new UnityEngine.Object[circuit.Waypoints.Length];
-            for(int i = 0; i < invokeNames.Length; i++)
+            invokeObject = new Object[circuit.Waypoints.Length];
+            for(var i = 0; i < invokeNames.Length; i++)
                 invokeWaypointEnabled[i] = false;
             initialSpeed = routeSpeed;
         }
@@ -66,7 +48,7 @@ public class BetterWaypointFollower : MonoBehaviour {
     private void Start() {
         // Set up our distances, so we know which waypoint we're at.
         distances = new float[circuit.Waypoints.Length + 1];
-        for(int i = 1; i < circuit.Waypoints.Length; i++)
+        for(var i = 1; i < circuit.Waypoints.Length; i++)
             distances[i] = (circuit.Waypoints[i].position - circuit.Waypoints[i - 1].position).magnitude + distances[i - 1];
         distances[circuit.Waypoints.Length] = (circuit.Waypoints[circuit.Waypoints.Length - 1].position - circuit.Waypoints[0].position).magnitude + distances[circuit.Waypoints.Length - 1];
 
@@ -78,18 +60,17 @@ public class BetterWaypointFollower : MonoBehaviour {
         progressDistance = 0;
         transform.position = circuit.Waypoints[0].position;
         transform.LookAt(circuit.GetRoutePoint(lookAheadDistance + 6.576f).position);
-        if(varyingSpeed) {
+        if(varyingSpeed)
             currentSpeed = initialSpeed;
-        } else {
+        else
             currentSpeed = routeSpeed;
-        }
     }
 
     private void Update() {
         #region Determining our position relative to waypoints.
         if(progressDistance > distances[distances.Length - 1])
             progressDistance -= distances[distances.Length - 1];
-        for(int i = 1; i < distances.Length; i++)
+        for(var i = 1; i < distances.Length; i++)
             if(progressDistance < distances[i]) {
                 // Check if we've passed a new waypoint and whether or not it has a method call attached.
                 if(i - 1 != lastWaypoint && invokeMethods && invokeWaypointEnabled[i - 1])
@@ -99,8 +80,8 @@ public class BetterWaypointFollower : MonoBehaviour {
             }
         #endregion
         if(varyingSpeed) { // Adjust speed based on Editor provided data.
-            float waypointSpeed = Mathf.Pow(routeSpeed, waypointSpeedFactors[lastWaypoint]) - .99f;
-            float acceleration = Mathf.Pow(routeSpeed, rateOfChange);
+            var waypointSpeed = Mathf.Pow(routeSpeed, waypointSpeedFactors[lastWaypoint]) - .99f;
+            var acceleration = Mathf.Pow(routeSpeed, rateOfChange);
             if(Mathf.Abs(currentSpeed - waypointSpeed) > acceleration / 50f)
                 currentSpeed += (waypointSpeed < currentSpeed ? -1f : 1f) * acceleration * Time.deltaTime;
             else
@@ -131,16 +112,35 @@ public class BetterWaypointFollower : MonoBehaviour {
             Gizmos.DrawLine(transform.position, transform.position + transform.forward);
         }
     }
+
+    #region Varying Speed Variables
+
+    public bool varyingSpeed;
+    public float initialSpeed;
+    public float rateOfChange = 1f;
+    public float[] waypointSpeedFactors;
+
+    #endregion
+
+    #region Invoke Method Variables
+
+    public bool invokeMethods;
+    public bool[] invokeWaypointEnabled;
+    public string[] invokeNames;
+    public float[] invokeDelay;
+    public Object[] invokeObject;
+
+    #endregion
 }
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(BetterWaypointFollower))]
 public class BetterWaypointEditor : Editor {
-    List<String> monoBehaviours;
-    int totalMethods;
+    private List<string> monoBehaviours;
+    private int totalMethods;
 
     public override void OnInspectorGUI() {
-        BetterWaypointFollower script = (BetterWaypointFollower)target;
+        var script = (BetterWaypointFollower)target;
         script.circuitObject = EditorGUILayout.ObjectField("Waypoint Circuit", script.circuitObject, typeof(WaypointCircuit), true);
         if(script.circuitObject != null) {
             EditorGUILayout.Space();
@@ -160,7 +160,7 @@ public class BetterWaypointEditor : Editor {
                 EditorGUILayout.Space();
                 script.initialSpeed = EditorGUILayout.FloatField("Initial Speed In Units/Sec", script.initialSpeed);
                 EditorGUILayout.Space();
-                for(int i = 0; i < script.waypointSpeedFactors.Length; i++)
+                for(var i = 0; i < script.waypointSpeedFactors.Length; i++)
                     script.waypointSpeedFactors[i] = EditorGUILayout.Slider("Waypoint " + i.ToString("D3") + " Factor", script.waypointSpeedFactors[i], 0f, 2f);
                 EditorGUILayout.Space();
                 script.rateOfChange = EditorGUILayout.Slider("Rate Of Change Factor", script.rateOfChange, 0f, 2f);
@@ -178,34 +178,33 @@ public class BetterWaypointEditor : Editor {
             }
             if(script.invokeMethods) {
                 EditorGUILayout.Space();
-                for(int i = 0; i < script.invokeWaypointEnabled.Length; i++) {
+                for(var i = 0; i < script.invokeWaypointEnabled.Length; i++) {
                     script.invokeWaypointEnabled[i] = EditorGUILayout.Toggle("Invoke At Waypoint " + i.ToString("D3") + "?", script.invokeWaypointEnabled[i]);
                     if(script.invokeWaypointEnabled[i]) {
                         script.invokeObject[i] = EditorGUILayout.ObjectField("Game Object Target", script.invokeObject[i], typeof(MonoBehaviour), true);
                         if(script.invokeObject[i] != null) {
-                            Type type = script.invokeObject[i].GetType();
-                            MethodInfo[] methods = type.GetMethods();
+                            var type = script.invokeObject[i].GetType();
+                            var methods = type.GetMethods();
                             if(monoBehaviours == null)
                                 FillList();
-                            string[] names = new string[methods.Length - totalMethods + 1];
+                            var names = new string[methods.Length - totalMethods + 1];
                             if(names.Length == 0) {
                                 EditorGUILayout.HelpBox("You have no public methods in your game object."
                                         + "\nAdd 'public' in front of the method you wish to invoke.", MessageType.Error);
                             } else {
-                                int l = 0;
-                                for(int j = 0; j < methods.Length; j++)
-                                    if(!monoBehaviours.Contains(methods[j].Name)) {
+                                var l = 0;
+                                for(var j = 0; j < methods.Length; j++)
+                                    if(!monoBehaviours.Contains(methods[j].Name))
                                         names[l++] = methods[j].Name;
-                                    }
-                                int index = 0;
-                                for(int j = 0; j < names.Length; j++)
+                                var index = 0;
+                                for(var j = 0; j < names.Length; j++)
                                     if(names[j] == script.invokeNames[i]) {
                                         index = j;
                                         break;
                                     }
                                 index = EditorGUILayout.Popup("Method To Call", index, names);
                                 script.invokeNames[i] = names[index];
-                                float delay = EditorGUILayout.FloatField("Delay In Seconds", script.invokeDelay[i]);
+                                var delay = EditorGUILayout.FloatField("Delay In Seconds", script.invokeDelay[i]);
                                 script.invokeDelay[i] = delay < 0f ? 0f : delay;
                             }
                         }
@@ -218,8 +217,8 @@ public class BetterWaypointEditor : Editor {
     private void FillList() {
         totalMethods = 0;
         monoBehaviours = new List<string>();
-        MethodInfo[] methods = typeof(MonoBehaviour).GetMethods();
-        foreach(MethodInfo mi in methods) {
+        var methods = typeof(MonoBehaviour).GetMethods();
+        foreach(var mi in methods) {
             monoBehaviours.Add(mi.Name);
             totalMethods++;
         }
