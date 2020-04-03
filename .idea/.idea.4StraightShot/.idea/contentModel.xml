@@ -22,9 +22,11 @@
           </e>
           <e p="BetterWaypointFollower.cs" t="Include" />
           <e p="Player" t="Include">
-            <e p="Player.cs" t="Include" />
+            <e p="CollisionHandler.cs" t="Include" />
+            <e p="PlayerController.cs" t="Include" />
           </e>
         </e>
+        <e p="Enemy.cs" t="Include" />
         <e p="epyphany" t="Include">
           <e p="demo" t="Include">
             <e p="ressources" t="Include">
@@ -34,6 +36,7 @@
           </e>
           <e p="ReadMe.txt" t="Include" />
         </e>
+        <e p="ScoreUpdater.cs" t="Include" />
         <e p="Standard Assets" t="Include">
           <e p="2D" t="Include">
             <e p="Scripts" t="Include">

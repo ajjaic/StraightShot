@@ -31,4 +31,19 @@ public class SceneLoader : MonoBehaviour
 
         StartCoroutine(Helper());
     }
+
+    public void LoadCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadCurrentSceneWithDelay(float timeDelay)
+    {
+        IEnumerator Helper()
+        {
+            yield return new WaitForSeconds(timeDelay);
+            LoadCurrentScene();
+        }
+        StartCoroutine(Helper());
+    }
 }
