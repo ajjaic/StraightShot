@@ -1,37 +1,72 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityStandardAssets.Effects;
 
 public class PlayerController : MonoBehaviour
 {
     private bool _isPlayerDead;
-
     private float _xThrow, _yThrow;
 
-    [Header("Position factors")] [SerializeField]
-    private float positionPitchFactor = -4f;
-
+    [Header("Position factors")] 
+    [SerializeField] private float positionPitchFactor = -4f;
     [SerializeField] private float positionYawFactor = 1.875f;
 
-    [Header("Control throw factors")] [SerializeField]
-    private float rotationPitchFactor = -15;
-
+    [Header("Control throw factors")] 
+    [SerializeField] private float rotationPitchFactor = -15;
     [SerializeField] private float rotationRollFactor = -30f;
 
-    [Header("Bounds")] [SerializeField] private float xPosRange = 11f;
-
-    [Header("Movement speed")] [Tooltip("In ms^-1")] [SerializeField]
-    private float xSpeed = 15;
-
+    [Header("Bounds")] 
+    [SerializeField] private float xPosRange = 11f;
     [SerializeField] private float yPosRange = 8f;
+
+    [Header("Movement speed")] 
+    [Tooltip("In ms^-1")] [SerializeField] private float xSpeed = 15;
     [Tooltip("In ms^-1")] [SerializeField] private float ySpeed = 15;
 
+    [Header("Particle Weapons")] 
+    [SerializeField] private ParticleSystem[] particleWeapons;
+
     // messages
+
+    private void Start()
+    {
+        foreach (ParticleSystem weapon in particleWeapons)
+        {
+            var e = weapon.emission;
+            e.enabled = false;
+        } 
+    }
+
     private void Update()
     {
         if (!_isPlayerDead)
         {
             Translate();
             Rotate();
+            Fire();
+        }
+    }
+
+    private void Fire()
+    {
+        if (Input.GetButtonDown("Fire"))
+        {
+            foreach (ParticleSystem weapon in particleWeapons)
+            {
+                var e = weapon.emission;
+                e.enabled = true;
+            }
+        }
+
+        if (Input.GetButtonUp("Fire"))
+        {
+            foreach (ParticleSystem weapon in particleWeapons)
+            {
+                // weapon.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+                var e = weapon.emission;
+                e.enabled = false;
+            }
         }
     }
 
