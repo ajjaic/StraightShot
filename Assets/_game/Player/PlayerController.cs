@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         foreach (ParticleSystem weapon in particleWeapons)
         {
+            weapon.Play();
             var e = weapon.emission;
             e.enabled = false;
         } 
@@ -63,7 +64,6 @@ public class PlayerController : MonoBehaviour
         {
             foreach (ParticleSystem weapon in particleWeapons)
             {
-                // weapon.Stop(false, ParticleSystemStopBehavior.StopEmitting);
                 var e = weapon.emission;
                 e.enabled = false;
             }
@@ -77,7 +77,6 @@ public class PlayerController : MonoBehaviour
         xRot = transform.localPosition.y * positionPitchFactor + _yThrow * rotationPitchFactor;
         yRot = transform.localPosition.x * positionYawFactor;
         zRot = _xThrow * rotationRollFactor;
-        // zRot = _xThrow * rotationPitchFactor;
 
         transform.localRotation = Quaternion.Euler(xRot, yRot, zRot);
     }
